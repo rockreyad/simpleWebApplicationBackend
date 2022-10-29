@@ -15,12 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = require("../config/config");
 const Logger_1 = __importDefault(require("./Logger"));
-function connect() {
+function connect(startServer) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const dbUrl = config_1.config.mongo.url;
             yield mongoose_1.default.connect(dbUrl);
-            Logger_1.default.info('Database Connected!');
+            Logger_1.default.connect('Database Connected!');
+            startServer();
         }
         catch (error) {
             Logger_1.default.error(error);

@@ -1,11 +1,22 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const user_1 = __importDefault(require("../routes/user"));
+const users_1 = require("../controllers/users");
 function routes(app) {
-    app.use('/user', user_1.default);
+    /** Home Page */
+    app.get('/', (req, res) => {
+        res.status(200).send('Welcome to Rest Api Service');
+    });
+    /** User :  */
+    app.post('/create', users_1.create_user);
+    app.patch('/update', users_1.update_user);
+    app.get('/find', users_1.find_user);
+    app.delete('/delete', users_1.delete_user);
+    /** About Page */
+    app.get('/about', (req, res) => {
+        res.status(200).send({
+            message: 'We are working only for your service'
+        });
+    });
 }
 exports.default = routes;
 //# sourceMappingURL=index.js.map
