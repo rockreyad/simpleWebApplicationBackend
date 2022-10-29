@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const DATABASE_URL = process.env.DATABASE_URL || '';
+const DATABASE_URL = process.env.DATABASE_URL;
 
 const SERVER_PORT = process.env.SERVER_PORT ? Number(process.env.SERVER_PORT) : 1337;
 
