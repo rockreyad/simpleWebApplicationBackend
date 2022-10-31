@@ -30,8 +30,7 @@ const set_instructor = (req, res) => __awaiter(void 0, void 0, void 0, function*
         const find_teacher = yield (0, teacher_service_1.findOneTeacher)({ name: teacher });
         if (!find_teacher) {
             throw {
-                status: 409,
-                message: 'Duplicated'
+                message: 'No teacher Found!'
             };
         }
         const instructorInfo = {

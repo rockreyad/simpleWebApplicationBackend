@@ -22,7 +22,11 @@ const studentSchmea = new mongoose_1.Schema({
         type: mongoose_1.SchemaTypes.ObjectId,
         default: null
     },
-    credit: Number
+    creditTaken: Number,
+    creditAssign: {
+        type: Number,
+        default: 0
+    }
 });
 const StudentModel = (0, mongoose_1.model)('Student', studentSchmea);
 exports.default = StudentModel;

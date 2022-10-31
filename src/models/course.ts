@@ -3,12 +3,12 @@ import { Document, model, Schema } from 'mongoose';
 export interface CourseDocument extends Document {
     name: string;
     code: string;
-    credit: Number;
+    credit: number;
 }
 interface Course {
     name: string;
     code: string;
-    credit: Number;
+    credit: number;
 }
 
 const courseSchema = new Schema<Course>({

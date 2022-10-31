@@ -25,8 +25,7 @@ const set_instructor = async (req: Request, res: Response) => {
 
         if (!find_teacher) {
             throw {
-                status: 409,
-                message: 'Duplicated'
+                message: 'No teacher Found!'
             };
         }
 

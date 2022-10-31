@@ -6,7 +6,8 @@ export interface StudentDocument extends Document {
     password: string;
     cgpa: Number;
     depId?: Types.ObjectId;
-    credit: Number;
+    creditTaken: number;
+    creditAssign: number;
 }
 
 export interface Student {
@@ -15,7 +16,8 @@ export interface Student {
     password: string;
     cgpa: Number;
     depId?: Types.ObjectId;
-    credit?: Number;
+    creditTaken: number;
+    creditAssign: number;
 }
 
 const studentSchmea = new Schema<Student>({
@@ -39,7 +41,11 @@ const studentSchmea = new Schema<Student>({
         type: SchemaTypes.ObjectId,
         default: null
     },
-    credit: Number
+    creditTaken: Number,
+    creditAssign: {
+        type: Number,
+        default: 0
+    }
 });
 
 const StudentModel = model<Student>('Student', studentSchmea);

@@ -29,7 +29,8 @@ const create_student = (req, res) => __awaiter(void 0, void 0, void 0, function*
             studentId: id,
             password,
             depId: fetchDepartment === null || fetchDepartment === void 0 ? void 0 : fetchDepartment._id,
-            credit,
+            creditAssign: credit,
+            creditTaken: 0,
             cgpa: 0
         };
         const find_student = yield (0, student_service_1.findStudent)({ studentId: studentInfo.studentId });

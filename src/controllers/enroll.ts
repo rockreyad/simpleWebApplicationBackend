@@ -49,6 +49,11 @@ const enroll_student = async (req: Request, res: Response) => {
             };
         }
 
+        if (countCredit(find_student.creditTaken, find_course.credit) > find_student.creditAssign) {
+            throw {
+                message: 'You can not take this code, credit limits'
+            };
+        }
         let enroll;
         if (!find_enroll) {
             enroll = await enrollStudent({ instructor: find_instructor._id, student: [find_student._id] });
@@ -56,6 +61,7 @@ const enroll_student = async (req: Request, res: Response) => {
             await findAndUpdate({ _id: find_enroll._id }, { student: [...find_enroll.student, find_student._id] });
         }
 
+        await find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit) });
         return res.status(201).send({
             status: 'SUCESS',
             message: 'student enrolled successfully!'
@@ -67,5 +73,9 @@ const enroll_student = async (req: Request, res: Response) => {
         });
     }
 };
+
+function countCredit(fetchCredit: number, addCredit: number) {
+    return fetchCredit + addCredit;
+}
 
 export { enroll_student };

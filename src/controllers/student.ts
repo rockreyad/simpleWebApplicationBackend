@@ -23,7 +23,8 @@ const create_student = async (req: Request, res: Response) => {
             studentId: id,
             password,
             depId: fetchDepartment?._id,
-            credit,
+            creditAssign: credit,
+            creditTaken: 0,
             cgpa: 0
         };
 

@@ -49,6 +49,11 @@ const enroll_student = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 message: 'You already enrolled in this course'
             };
         }
+        if (countCredit(find_student.creditTaken, find_course.credit) > find_student.creditAssign) {
+            throw {
+                message: 'You can not take this code, credit limits'
+            };
+        }
         let enroll;
         if (!find_enroll) {
             enroll = yield (0, enroll_service_1.enrollStudent)({ instructor: find_instructor._id, student: [find_student._id] });
@@ -56,6 +61,7 @@ const enroll_student = (req, res) => __awaiter(void 0, void 0, void 0, function*
         else {
             yield (0, enroll_service_1.findAndUpdate)({ _id: find_enroll._id }, { student: [...find_enroll.student, find_student._id] });
         }
+        yield find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit) });
         return res.status(201).send({
             status: 'SUCESS',
             message: 'student enrolled successfully!'
@@ -69,4 +75,7 @@ const enroll_student = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.enroll_student = enroll_student;
+function countCredit(fetchCredit, addCredit) {
+    return fetchCredit + addCredit;
+}
 //# sourceMappingURL=enroll.js.map
