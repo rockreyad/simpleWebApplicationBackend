@@ -53,21 +53,20 @@ function startServer() {
         next();
     });
 
-    /** Error Handling */ //BUG: Not working
-    // app.use((req: Request, res: Response, next: NextFunction) => {
-    //     const error = new Error('Not found');
-    //     res.status(404).json({
-    //         message: error.message
-    //     });
-
-    //     next();
-    // });
-
     /** Create Http Server to run application */
     http.createServer(app).listen(port, async (): Promise<void> => {
         Logger.info(`⚡: Server is running at https://localhost:${port}`);
 
         /** Routes Index */
         routes(app);
+
+        /** Error Handling */
+        app.use((req: Request, res: Response, next: NextFunction) => {
+            const error = new Error('Not found');
+            res.status(404).json({
+                message: error.message
+            });
+            next();
+        });
     });
 }

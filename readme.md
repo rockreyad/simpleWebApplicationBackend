@@ -4,6 +4,17 @@
 
 #### Base64 encode the keys: https://www.base64encode.org/
 
+## GRADING SYSTEM
+
+-   Description
+
+    -   Different department students want to get their individual marks on courses
+    -   Course instructor can only submit grade on enrolled student
+
+-   ROLE
+    -   Teacher
+    -   Student
+
 ## Concepts
 
 -   REST API principals

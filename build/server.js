@@ -56,19 +56,19 @@ function startServer() {
         }
         next();
     });
-    /** Error Handling */ //BUG: Not working
-    // app.use((req: Request, res: Response, next: NextFunction) => {
-    //     const error = new Error('Not found');
-    //     res.status(404).json({
-    //         message: error.message
-    //     });
-    //     next();
-    // });
     /** Create Http Server to run application */
     http_1.default.createServer(app).listen(port, () => __awaiter(this, void 0, void 0, function* () {
         Logger_1.default.info(`⚡: Server is running at https://localhost:${port}`);
         /** Routes Index */
         (0, routes_1.default)(app);
+        /** Error Handling */
+        app.use((req, res, next) => {
+            const error = new Error('Not found');
+            res.status(404).json({
+                message: error.message
+            });
+            next();
+        });
     }));
 }
 //# sourceMappingURL=server.js.map

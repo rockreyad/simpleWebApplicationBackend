@@ -1,0 +1,1 @@
+{"version":3,"file":"department.js","sourceRoot":"","sources":["../../src/models/department.ts"],"names":[],"mappings":";;AAAA,uCAAmD;AAWnD,MAAM,gBAAgB,GAAG,IAAI,iBAAM,CAAa;IAC5C,IAAI,EAAE,MAAM;IACZ,KAAK,EAAE,MAAM;CAChB,CAAC,CAAC;AAEH,MAAM,eAAe,GAAG,IAAA,gBAAK,EAAa,YAAY,EAAE,gBAAgB,CAAC,CAAC;AAE1E,kBAAe,eAAe,CAAC"}
