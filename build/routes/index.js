@@ -34,8 +34,11 @@ function routes(app) {
     app.post('/set-instructor', courseInstructor_1.set_instructor);
     /** Enroll : enroll student */
     app.post('/enroll', enroll_1.enroll_student);
-    /** Grade: set */
+    app.delete('/enroll', enroll_1.course_drop);
+    /** Grade: set ,get marks of one course*/
     app.post('/set-grade', grade_1.set_grade);
+    app.get('/course-marks', grade_1.course_marks);
+    app.get('/grade', grade_1.view_marks);
     /** About Page */
     app.get('/about', (req, res) => {
         res.status(200).send({

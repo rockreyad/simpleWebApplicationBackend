@@ -9,11 +9,11 @@ function setGrade(input) {
     return grade_1.default.create(input);
 }
 exports.setGrade = setGrade;
-function findGrade(query, options) {
+function findGrade(query, options = { lean: true }) {
     return grade_1.default.find(query, {}, options);
 }
 exports.findGrade = findGrade;
-function findOneGrade(query, options) {
+function findOneGrade(query, options = { lean: true }) {
     return grade_1.default.findOne(query, {}, options);
 }
 exports.findOneGrade = findOneGrade;

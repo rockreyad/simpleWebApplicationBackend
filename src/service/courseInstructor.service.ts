@@ -8,3 +8,6 @@ export function setInstructor(input: DocumentDefinition<CourseInstructorDocument
 export function findOneInstructor(query: FilterQuery<CourseInstructorDocument>, options: QueryOptions = { lean: true }) {
     return CourseInstructor.findOne(query, {}, options);
 }
+export function findInstructor(query: FilterQuery<CourseInstructorDocument>, options: QueryOptions = { lean: true }) {
+    return CourseInstructor.find(query, {}, options);
+}

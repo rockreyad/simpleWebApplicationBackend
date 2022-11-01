@@ -2,12 +2,12 @@ import { Document, model, Schema, SchemaTypes, Types } from 'mongoose';
 
 export interface EnrollDocument extends Document {
     student: [Types.ObjectId];
-    instructor: Object;
+    instructor: Types.ObjectId;
 }
 
 interface Enroll {
     student: [Types.ObjectId];
-    instructor: Object;
+    instructor: Types.ObjectId;
 }
 
 const enrollSchema = new Schema<Enroll>(

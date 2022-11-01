@@ -5,11 +5,11 @@ export function setGrade(input: DocumentDefinition<GradeDocument>) {
     return Grade.create(input);
 }
 
-export function findGrade(query: FilterQuery<GradeDocument>, options: QueryOptions) {
+export function findGrade(query: FilterQuery<GradeDocument>, options: QueryOptions = { lean: true }) {
     return Grade.find(query, {}, options);
 }
 
-export function findOneGrade(query: FilterQuery<GradeDocument>, options: QueryOptions) {
+export function findOneGrade(query: FilterQuery<GradeDocument>, options: QueryOptions = { lean: true }) {
     return Grade.findOne(query, {}, options);
 }
 

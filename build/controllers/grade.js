@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.set_grade = void 0;
+exports.view_marks = exports.course_marks = exports.set_grade = void 0;
 const course_service_1 = require("../service/course.service");
 const courseInstructor_service_1 = require("../service/courseInstructor.service");
 const enroll_service_1 = require("../service/enroll.service");
@@ -81,4 +81,95 @@ const set_grade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.set_grade = set_grade;
+const course_marks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { course, student } = req.body;
+    if (!course || !student) {
+        return res.status(400).json({
+            message: 'Course and student are Required field'
+        });
+    }
+    try {
+        const find_student = yield (0, student_service_1.findOneStudent)({ studentId: student }, { lean: false });
+        if (!find_student) {
+            throw {
+                message: 'No student with this id!'
+            };
+        }
+        const find_course = yield (0, course_service_1.findOneCourse)({ code: course }, { lean: false });
+        if (!find_course) {
+            throw {
+                message: 'No course exists with this code!'
+            };
+        }
+        const find_instructor = yield (0, courseInstructor_service_1.findInstructor)({ course: find_course._id }, { lean: false });
+        if (find_instructor.length <= 0) {
+            throw {
+                message: `No teacher assigned for ${find_course.name} course!`
+            };
+        }
+        const student_enroll = yield (0, enroll_service_1.findEnroll)({ student: find_student._id }, { lean: false }).populate('instructor');
+        if (student_enroll.length <= 0) {
+            throw {
+                message: 'Student did not enrolled any course!'
+            };
+        }
+        let assign_instructor = find_instructor.map((value) => value.id);
+        let enroll_instructors = student_enroll.map((value) => value.instructor.id);
+        let get_instructor = enroll_instructors.filter((element) => assign_instructor.includes(element));
+        if (get_instructor.length <= 0) {
+            throw {
+                message: `Student did not enrolled ${find_course.name} course!`
+            };
+        }
+        let course_marks = yield (0, grade_service_1.findOneGrade)({ student: find_student.id, courseInstructor: get_instructor }, { lean: false });
+        if (!course_marks) {
+            throw {
+                message: `You did not get any marks in ${find_course.name}!`
+            };
+        }
+        return res.status(200).send({
+            message: `Yout got ${course_marks === null || course_marks === void 0 ? void 0 : course_marks.marks} Marks in ${find_course.name}`
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            status: 'FAILED',
+            message: error
+        });
+    }
+});
+exports.course_marks = course_marks;
+const view_marks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { student } = req.body;
+    try {
+        const find_student = yield (0, student_service_1.findOneStudent)({ studentId: student }, { lean: false });
+        if (!find_student) {
+            throw {
+                message: 'No student with this id!'
+            };
+        }
+        const grades = yield (0, grade_service_1.findGrade)({ student: find_student._id }, { lean: false }).select('marks courseInstructor _id').populate('courseInstructor');
+        if (grades.length <= 0) {
+            throw {
+                message: `${find_student.name} has not assign any course marks`
+            };
+        }
+        const view_grade = grades.map((course) => ({
+            marks: course.marks,
+            instructor: course.courseInstructor
+        }));
+        // findOneInstructor({ _id: course.courseInstructor._id }, { lean: false }).populate('course')
+        return res.status(200).send({
+            message: `Results`,
+            data: view_grade
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            status: 'FAILED',
+            message: error
+        });
+    }
+});
+exports.view_marks = view_marks;
 //# sourceMappingURL=grade.js.map

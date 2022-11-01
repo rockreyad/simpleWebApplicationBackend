@@ -64,7 +64,7 @@ const enroll_student = async (req: Request, res: Response) => {
         await find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit) });
         return res.status(201).send({
             status: 'SUCESS',
-            message: 'student enrolled successfully!'
+            message: `${find_student.name} enrolled in ${find_course.name} successfully!`
         });
     } catch (error) {
         res.status(500).json({
@@ -74,8 +74,68 @@ const enroll_student = async (req: Request, res: Response) => {
     }
 };
 
+const course_drop = async (req: Request, res: Response) => {
+    const { course, studentId } = req.body;
+
+    if (!course || !studentId) {
+        return res.status(400).json({
+            message: 'course code and student id Required field'
+        });
+    }
+
+    try {
+        const find_course = await findOneCourse({ code: course });
+
+        if (!find_course) {
+            throw {
+                message: 'No course exists with this code!'
+            };
+        }
+
+        const find_student = await findOneStudent({ studentId: studentId }, { lean: false });
+
+        if (!find_student) {
+            throw {
+                message: 'No student with this id!'
+            };
+        }
+
+        const find_instructor = await findOneInstructor({ course: find_course._id });
+
+        if (!find_instructor) {
+            throw {
+                message: 'No instructor with this name taking courses!'
+            };
+        }
+
+        const find_enroll = await findOneEnroll({ instructor: find_instructor._id, student: find_student._id }, { lean: false }).populate('student');
+
+        if (!find_enroll) {
+            throw {
+                message: 'You did not enroll in this course!'
+            };
+        }
+
+        //Drop the student from course
+        let drop_student = find_enroll.student.filter((value) => value.id != find_student.id);
+
+        await findAndUpdate({ instructor: find_instructor._id, student: find_student._id }, { student: drop_student }, { lean: false });
+
+        return res.status(200).send({
+            status: 'SUCESS',
+            message: `${find_student.name} drop from ${find_course.name} successfully!`
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'FAILED',
+            message: error
+        });
+    }
+};
+
+/** Custom Function */
 function countCredit(fetchCredit: number, addCredit: number) {
     return fetchCredit + addCredit;
 }
 
-export { enroll_student };
+export { enroll_student, course_drop };

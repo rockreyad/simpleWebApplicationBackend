@@ -6,8 +6,8 @@ import { all_student, create_student, update_student } from '../controllers/stud
 import { all_teacher, create_teacher, update_teacher } from '../controllers/teacher';
 
 import { set_instructor } from '../controllers/courseInstructor';
-import { enroll_student } from '../controllers/enroll';
-import { set_grade } from '../controllers/grade';
+import { course_drop, enroll_student } from '../controllers/enroll';
+import { course_marks, set_grade, view_marks } from '../controllers/grade';
 
 function routes(app: Express) {
     /** Home Page */
@@ -42,9 +42,13 @@ function routes(app: Express) {
 
     /** Enroll : enroll student */
     app.post('/enroll', enroll_student);
+    app.delete('/enroll', course_drop);
 
-    /** Grade: set */
+    /** Grade: set ,get marks of one course*/
     app.post('/set-grade', set_grade);
+    app.get('/course-marks', course_marks);
+    app.get('/grade', view_marks);
+
     /** About Page */
     app.get('/about', (req: Request, res: Response) => {
         res.status(200).send({
