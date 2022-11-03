@@ -5,7 +5,7 @@ export interface CourseDocument extends Document {
     code: string;
     credit: number;
 }
-interface Course {
+export interface Course {
     name: string;
     code: string;
     credit: number;

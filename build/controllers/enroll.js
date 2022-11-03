@@ -49,7 +49,7 @@ const enroll_student = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 message: 'You already enrolled in this course'
             };
         }
-        if (countCredit(find_student.creditTaken, find_course.credit) > find_student.creditAssign) {
+        if (countCredit(find_student.creditTaken, find_course.credit, 'add') > find_student.creditAssign) {
             throw {
                 message: 'You can not take this code, credit limits'
             };
@@ -61,7 +61,7 @@ const enroll_student = (req, res) => __awaiter(void 0, void 0, void 0, function*
         else {
             yield (0, enroll_service_1.findAndUpdate)({ _id: find_enroll._id }, { student: [...find_enroll.student, find_student._id] });
         }
-        yield find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit) });
+        yield find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit, 'add') });
         return res.status(201).send({
             status: 'SUCESS',
             message: `${find_student.name} enrolled in ${find_course.name} successfully!`
@@ -110,6 +110,7 @@ const course_drop = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         //Drop the student from course
         let drop_student = find_enroll.student.filter((value) => value.id != find_student.id);
         yield (0, enroll_service_1.findAndUpdate)({ instructor: find_instructor._id, student: find_student._id }, { student: drop_student }, { lean: false });
+        yield find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit, 'sub') });
         return res.status(200).send({
             status: 'SUCESS',
             message: `${find_student.name} drop from ${find_course.name} successfully!`
@@ -124,7 +125,18 @@ const course_drop = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 });
 exports.course_drop = course_drop;
 /** Custom Function */
-function countCredit(fetchCredit, addCredit) {
-    return fetchCredit + addCredit;
+function countCredit(fetchCredit, addCredit, operaton) {
+    let credit = 0;
+    switch (operaton) {
+        case 'add':
+            credit = fetchCredit + addCredit;
+            break;
+        case 'sub':
+            credit = fetchCredit - addCredit;
+            break;
+        default:
+            break;
+    }
+    return credit;
 }
 //# sourceMappingURL=enroll.js.map

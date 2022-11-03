@@ -1,15 +1,16 @@
-import { Document, model, Schema, SchemaTypes, Types } from 'mongoose';
+import { Document, model, PopulatedDoc, Schema, SchemaTypes, Types } from 'mongoose';
+import { CourseInstructorDocument } from './courseInstructor';
 
 export interface GradeDocument extends Document {
     student: Types.ObjectId;
     marks: Number;
-    courseInstructor: Types.ObjectId;
+    courseInstructor: PopulatedDoc<CourseInstructorDocument>;
 }
 
 interface Grade {
     student: Types.ObjectId;
     marks: Number;
-    courseInstructor: Types.ObjectId;
+    courseInstructor: PopulatedDoc<CourseInstructorDocument>;
 }
 
 const gradeSchmea = new Schema<Grade>({

@@ -49,7 +49,7 @@ const enroll_student = async (req: Request, res: Response) => {
             };
         }
 
-        if (countCredit(find_student.creditTaken, find_course.credit) > find_student.creditAssign) {
+        if (countCredit(find_student.creditTaken, find_course.credit, 'add') > find_student.creditAssign) {
             throw {
                 message: 'You can not take this code, credit limits'
             };
@@ -61,7 +61,7 @@ const enroll_student = async (req: Request, res: Response) => {
             await findAndUpdate({ _id: find_enroll._id }, { student: [...find_enroll.student, find_student._id] });
         }
 
-        await find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit) });
+        await find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit, 'add') });
         return res.status(201).send({
             status: 'SUCESS',
             message: `${find_student.name} enrolled in ${find_course.name} successfully!`
@@ -121,6 +121,7 @@ const course_drop = async (req: Request, res: Response) => {
 
         await findAndUpdate({ instructor: find_instructor._id, student: find_student._id }, { student: drop_student }, { lean: false });
 
+        await find_student.updateOne({ creditTaken: countCredit(find_student.creditTaken, find_course.credit, 'sub') });
         return res.status(200).send({
             status: 'SUCESS',
             message: `${find_student.name} drop from ${find_course.name} successfully!`
@@ -134,8 +135,19 @@ const course_drop = async (req: Request, res: Response) => {
 };
 
 /** Custom Function */
-function countCredit(fetchCredit: number, addCredit: number) {
-    return fetchCredit + addCredit;
+function countCredit(fetchCredit: number, addCredit: number, operaton: string) {
+    let credit = 0;
+    switch (operaton) {
+        case 'add':
+            credit = fetchCredit + addCredit;
+            break;
+        case 'sub':
+            credit = fetchCredit - addCredit;
+            break;
+        default:
+            break;
+    }
+    return credit;
 }
 
 export { enroll_student, course_drop };

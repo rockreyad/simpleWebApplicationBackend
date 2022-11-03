@@ -148,20 +148,37 @@ const view_marks = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 message: 'No student with this id!'
             };
         }
-        const grades = yield (0, grade_service_1.findGrade)({ student: find_student._id }, { lean: false }).select('marks courseInstructor _id').populate('courseInstructor');
+        const grades = yield (0, grade_service_1.findGrade)({ student: find_student._id }, { lean: false })
+            .select('marks courseInstructor _id')
+            .populate({ path: 'courseInstructor', populate: { path: 'course' } });
         if (grades.length <= 0) {
             throw {
                 message: `${find_student.name} has not assign any course marks`
             };
         }
+        //CGPA = course marks converted to grade point(4.00) then multi by course credit .. after sum every course grade then divided by stduent total credit taken
         const view_grade = grades.map((course) => ({
-            marks: course.marks,
-            instructor: course.courseInstructor
+            name: course.courseInstructor.course.name,
+            credit: course.courseInstructor.course.credit,
+            marks: course.marks
         }));
-        // findOneInstructor({ _id: course.courseInstructor._id }, { lean: false }).populate('course')
+        let cg = 0.0;
+        let totalCredit = 0;
+        view_grade.forEach((course) => {
+            if (course.marks <= 100 || course.marks >= 90) {
+                cg = course.credit * 4.0;
+                totalCredit += course.credit;
+            }
+            else if (course.marks <= 80 || course.marks > 90) {
+                cg = course.credit * 3.0;
+                totalCredit += course.credit;
+            }
+        });
+        let count_cgpa = (cg / totalCredit).toFixed(2);
         return res.status(200).send({
             message: `Results`,
-            data: view_grade
+            cgpa: count_cgpa,
+            details: view_grade
         });
     }
     catch (error) {
