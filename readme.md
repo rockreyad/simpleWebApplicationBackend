@@ -1,26 +1,27 @@
-# Build a REST API with Node.js, Mongoose & TypeScript
-
-#### Generate new keys: https://travistidwell.com/jsencrypt/demo/
-
-#### Base64 encode the keys: https://www.base64encode.org/
-
-## GRADING SYSTEM
+## SIMPLE WEB APP API
 
 -   Description
 
-    -   Different department students want to get their individual marks on courses
-    -   Course instructor can only submit grade on enrolled student
+    -   User Can Register and Login
+    -   When User Register a role will assigned
 
 -   ROLE
-    -   Teacher
-    -   Student
+
+    -   user
+    -   admin (assigned direct in database)
+
+-   API ROUTES
+    -   / - Welcome
+    -   /login - email,password
+        -   response message, error, status, data
+    -   /register - firstName,lastName,email,password
+        -   response message , status, error
 
 ## Concepts
 
 -   REST API principals
-    -   CRUD
+    -   get and post
     -   HTTP methods
--   JWT & refresh tokens
 -   Request validation
 
 ## Technologies
@@ -30,7 +31,3 @@
 -   TypeScript
 -   Express.js & Express.js middleware
 -   Zod validation
-
-## Data flow
-
-![Alt text](https://github.com/TomDoesTech/REST-API-Tutorial-Updated/blob/main/diagrams/data-flow.png)
