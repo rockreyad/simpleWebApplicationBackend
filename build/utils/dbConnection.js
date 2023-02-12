@@ -19,8 +19,14 @@ function connect(startServer) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const dbUrl = config_1.config.mongo.url;
-            yield mongoose_1.default.connect(dbUrl);
-            Logger_1.default.connect('Database Connected!');
+            yield mongoose_1.default
+                .connect(dbUrl)
+                .then(() => {
+                Logger_1.default.connect('Database Connected!');
+            })
+                .catch((error) => {
+                Logger_1.default.error(error);
+            });
             startServer();
         }
         catch (error) {
